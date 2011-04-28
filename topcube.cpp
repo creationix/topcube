@@ -6,11 +6,10 @@
 using namespace node;
 using namespace v8;
 
-static Handle<Value> main_quit(const Arguments& args) {
-  gtk_main_quit();
-  return Undefined();
+void destroy (void)
+{
+  gtk_main_quit ();
 }
-
 
 static Handle<Value> create_window(const Arguments& args)
 {
@@ -32,6 +31,8 @@ static Handle<Value> create_window(const Arguments& args)
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   web_view = webkit_web_view_new ();
 
+  gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
+
   gtk_container_add (GTK_CONTAINER (scrolled_window), web_view);
   gtk_container_add (GTK_CONTAINER (window), scrolled_window);
   
@@ -50,9 +51,8 @@ static Handle<Value> create_window(const Arguments& args)
 extern "C" {
   static void init(Handle<Object> target)
   {
-    NODE_SET_METHOD(target, "mainQuit", main_quit);
     NODE_SET_METHOD(target, "createWindow", create_window);
   }
 
-  NODE_MODULE(webapp, init);
+  NODE_MODULE(topcube_native, init);
 }

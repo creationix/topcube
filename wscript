@@ -19,15 +19,12 @@ def configure(conf):
 
 def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
-  obj.target = "webapp"
-  obj.source = "webapp.cpp"
+  obj.target = "topcube_native"
+  obj.source = "topcube.cpp"
   obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE"]
   obj.uselib = "GTK GLIB WEBKIT"
 
 def shutdown():
   if Options.commands['clean']:
-    if exists('webapp.node'): unlink('webapp.node')
-  else:
-    if exists('build/default/webapp.node') and not exists('webapp.node'):
-      symlink('build/default/webapp.node', 'webapp.node')
+    if exists('topcube_native.node'): unlink('topcube_native.node')
 
