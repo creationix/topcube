@@ -3,7 +3,7 @@
 var Http = require('http'),
     Stack = require('stack'),
     Creationix = require('creationix'),
-    WebApp = require('topcube');
+    TopCube = require('topcube');
 
 var PORT = 7569;
 var handler = Stack(
@@ -21,6 +21,6 @@ var handler = Stack(
     }
     throw err;
   }
-  var child = WebApp("http://127.0.0.1:" + PORT + "/index.html");
+  TopCube("http://127.0.0.1:" + PORT + "/index.html");
 }());
 
