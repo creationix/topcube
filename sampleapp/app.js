@@ -21,8 +21,13 @@ var handler = Stack(
     }
     throw err;
   }
-  WebApp("http://127.0.0.1:" + PORT + "/index.html", function (err) {
-    if (err) throw err;
-  });
+  console.dir(WebApp);
+  var child = WebApp("http://127.0.0.1:" + PORT + "/index.html");
+  child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
+  
+  console.dir(WebApp);
+  setTimeout(function () {
+  }, 1000);
 }());
 
