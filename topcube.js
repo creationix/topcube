@@ -6,5 +6,7 @@ module.exports = function WebApp(url) {
   child.on('exit', function (code) {
     process.exit(code);
   });
+  child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
   return child;
 };

@@ -4,7 +4,7 @@
   "dependencies": {
     "stack": ">=0.0.3",
     "creationix": ">=0.1.1",
-    "topcube": ">=0.0.2"
+    "topcube": ">=0.0.3"
   },
   "private": true
 }
