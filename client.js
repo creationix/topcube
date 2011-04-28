@@ -1,1 +1,1 @@
-require('./build/default/topcube_native.node').createWindow(process.argv[2]);
+require('./build/default/topcube_native.node').createWindow.apply(null, JSON.parse(process.argv[2]));

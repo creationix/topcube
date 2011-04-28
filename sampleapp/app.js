@@ -7,5 +7,5 @@ var Stack = require('stack'),
 TopCube(Stack(
   Creationix.log(),
   Creationix.static("/", __dirname + "/www", "index.html")
-));
+), 800, 600);
 

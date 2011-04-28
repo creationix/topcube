@@ -1,7 +1,7 @@
 var ChildProcess = require('child_process'),
     Http = require('http');
 
-module.exports = function WebApp(handler) {
+module.exports = function WebApp(handler, width, height) {
 
   var PORT = 7569;
   (function listen() {
@@ -18,7 +18,7 @@ module.exports = function WebApp(handler) {
   }());
 
   var url = "http://127.0.0.1:" + PORT + "/";
-  var child = ChildProcess.spawn(process.execPath, [__dirname + "/client.js", url]);
+  var child = ChildProcess.spawn(process.execPath, [__dirname + "/client.js", JSON.stringify([url, width, height])]);
   child.on('exit', function (code) {
     process.exit(code);
   });
