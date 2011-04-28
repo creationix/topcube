@@ -5,7 +5,7 @@
   "version": "0.0.3",
   "repository": {
     "type": "git",
-    "url": "git://github.com/creationix/webapp.git"
+    "url": "git://github.com/creationix/topcube.git"
   },
   "main": "./topcube.js",
   "dependencies": {},
