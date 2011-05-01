@@ -3,10 +3,12 @@ var ChildProcess = require('child_process'),
 
 module.exports = function WebApp(handler, width, height) {
 
+  var server;
   var PORT = 7569;
   (function listen() {
     try {
-      Http.createServer(handler).listen(PORT);
+      server = Http.createServer(handler);
+      server.listen(PORT);
     } catch (err) {
       if (err.code === "EADDRINUSE") {
         PORT++;
@@ -24,4 +26,5 @@ module.exports = function WebApp(handler, width, height) {
   });
   child.stdout.pipe(process.stdout);
   child.stderr.pipe(process.stderr);
+  return server;
 };
