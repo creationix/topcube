@@ -6,9 +6,18 @@
 using namespace node;
 using namespace v8;
 
+GtkWidget *window;
+GtkWidget *scrolled_window;
+GtkWidget *web_view;
+
 void destroy (void)
 {
   gtk_main_quit ();
+}
+
+void title_change (void)
+{
+	gtk_window_set_title(GTK_WINDOW (window), webkit_web_view_get_title(WEBKIT_WEB_VIEW (web_view)));
 }
 
 static Handle<Value> create_window(const Arguments& args)
@@ -31,10 +40,6 @@ static Handle<Value> create_window(const Arguments& args)
   String::Utf8Value url(args[0]->ToString());
   int width = args[1]->Int32Value();
   int height = args[2]->Int32Value();
-  
-  GtkWidget *window;
-  GtkWidget *scrolled_window;
-  GtkWidget *web_view;
 
   gtk_init (NULL, NULL);
 
@@ -43,6 +48,7 @@ static Handle<Value> create_window(const Arguments& args)
   web_view = webkit_web_view_new ();
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
+  gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
 
   gtk_container_add (GTK_CONTAINER (scrolled_window), web_view);
   gtk_container_add (GTK_CONTAINER (window), scrolled_window);
