@@ -66,6 +66,9 @@ static Handle<Value> create_window(const Arguments& args)
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   web_view = webkit_web_view_new ();
 
+  // @TODO: allow app name to be set via args.
+  gtk_window_set_wmclass(GTK_WINDOW (window), "TileMill", "TileMill");
+
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "new-window-policy-decision-requested", GTK_SIGNAL_FUNC (new_window), NULL);
@@ -76,6 +79,13 @@ static Handle<Value> create_window(const Arguments& args)
   webkit_web_view_load_uri (WEBKIT_WEB_VIEW (web_view), *url);
 
   gtk_window_set_default_size (GTK_WINDOW (window), width, height);
+
+  // @TODO: allow min width/height to specified as args.
+  GdkGeometry hints;
+  hints.min_width = 600;
+  hints.min_height = 400;
+  gtk_window_set_geometry_hints(GTK_WINDOW (window), GTK_WIDGET (scrolled_window), &hints, GDK_HINT_MIN_SIZE);
+
   gtk_widget_show_all (window);
 
   // TODO: find a way to not block the node event loop
