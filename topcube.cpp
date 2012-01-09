@@ -1,6 +1,7 @@
 #include <v8.h>
 #include <node.h>
 #include <gtk/gtk.h>
+#include <webkit/webkit.h>
 #include <webkit/webkitwebview.h>
 
 // stl for n00b debugging :)
@@ -39,6 +40,45 @@ void new_window (
   g_spawn_async(NULL, argv, NULL, G_SPAWN_LEAVE_DESCRIPTORS_OPEN, NULL, NULL, NULL, NULL);
 }
 
+static gboolean download (
+  WebKitWebView *web_view,
+  WebKitWebFrame *frame,
+  WebKitNetworkRequest *request,
+  const char *mime_type,
+  WebKitWebPolicyDecision *decision,
+  gpointer user_data)
+{
+  // Any other mime types we should handle?
+  if (strcmp(mime_type, "application/octet-stream") == 0) {
+    WebKitDownload *download = webkit_download_new(request);
+    GtkWidget *window = gtk_widget_get_toplevel (GTK_WIDGET(web_view));
+    GtkWidget *dialog = gtk_file_chooser_dialog_new ("Save file",
+      GTK_WINDOW(window),
+      GTK_FILE_CHOOSER_ACTION_SAVE,
+      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+      NULL);
+    gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+    gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), webkit_download_get_suggested_filename(download));
+
+    // @TODO getting a warning 'Unable to retrieve the file info' for the
+    // file as it does not exist yet... track down why?
+    if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
+      gchar *destination = g_filename_to_uri(gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog)), NULL, NULL);
+      webkit_download_set_destination_uri (download, destination);
+      webkit_download_start(download);
+      g_free(destination);
+    } else {
+      webkit_download_cancel(download);
+      g_object_unref(download);
+    }
+
+    gtk_widget_destroy (dialog);
+    webkit_web_policy_decision_ignore(decision);
+  }
+  return TRUE;
+}
+
 static Handle<Value> create_window(const Arguments& args)
 {
   HandleScope scope;
@@ -71,6 +111,7 @@ static Handle<Value> create_window(const Arguments& args)
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
+  gtk_signal_connect (GTK_OBJECT (web_view), "mime-type-policy-decision-requested", GTK_SIGNAL_FUNC (download), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "new-window-policy-decision-requested", GTK_SIGNAL_FUNC (new_window), NULL);
 
   gtk_container_add (GTK_CONTAINER (scrolled_window), web_view);
@@ -82,7 +123,7 @@ static Handle<Value> create_window(const Arguments& args)
 
   // @TODO: allow min width/height to specified as args.
   GdkGeometry hints;
-  hints.min_width = 600;
+  hints.min_width = 800;
   hints.min_height = 400;
   gtk_window_set_geometry_hints(GTK_WINDOW (window), GTK_WIDGET (scrolled_window), &hints, GDK_HINT_MIN_SIZE);
 
