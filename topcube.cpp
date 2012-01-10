@@ -84,7 +84,7 @@ static Handle<Value> create_window(const Arguments& args)
 {
   HandleScope scope;
 
-  if (args.Length() != 3) {
+  if (args.Length() < 3) {
     return ThrowException(Exception::TypeError(String::New("`url`, `width`, and `height` arguments are required")));
   }
   if (!args[0]->IsString()) {
@@ -100,15 +100,41 @@ static Handle<Value> create_window(const Arguments& args)
   String::Utf8Value url(args[0]->ToString());
   int width = args[1]->Int32Value();
   int height = args[2]->Int32Value();
+  int minwidth = 600;
+  int minheight = 400;
 
   gtk_init (NULL, NULL);
-
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   web_view = webkit_web_view_new ();
 
-  // @TODO: allow app name to be set via args.
-  gtk_window_set_wmclass(GTK_WINDOW (window), "TileMill", "TileMill");
+  if (args.Length() > 3) {
+    if (!args[3]->IsObject())
+      return ThrowException(Exception::TypeError(String::New("`options` must be an object")));
+    Local<Object> options = args[3]->ToObject();
+
+    if (options->Has(String::New("minwidth"))) {
+      Local<Value> bind_opt = options->Get(String::New("minwidth"));
+      if (!bind_opt->IsNumber())
+        return ThrowException(Exception::TypeError(String::New("'minwidth' must be a number")));
+      minwidth = bind_opt->IntegerValue();
+    }
+
+    if (options->Has(String::New("minheight"))) {
+      Local<Value> bind_opt = options->Get(String::New("minheight"));
+      if (!bind_opt->IsNumber())
+        return ThrowException(Exception::TypeError(String::New("'minheight' must be a number")));
+      minheight = bind_opt->IntegerValue();
+    }
+
+    if (options->Has(String::New("name"))) {
+      Local<Value> bind_opt = options->Get(String::New("name"));
+      if (!bind_opt->IsString())
+        return ThrowException(Exception::TypeError(String::New("'name' must be a string")));
+      String::Utf8Value name(bind_opt->ToString());
+      gtk_window_set_wmclass(GTK_WINDOW (window), *name, *name);
+    }
+  }
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
@@ -122,10 +148,9 @@ static Handle<Value> create_window(const Arguments& args)
 
   gtk_window_set_default_size (GTK_WINDOW (window), width, height);
 
-  // @TODO: allow min width/height to specified as args.
   GdkGeometry hints;
-  hints.min_width = 800;
-  hints.min_height = 400;
+  hints.min_width = minwidth;
+  hints.min_height = minheight;
   gtk_window_set_geometry_hints(GTK_WINDOW (window), GTK_WIDGET (scrolled_window), &hints, GDK_HINT_MIN_SIZE);
 
   gtk_widget_show_all (window);
