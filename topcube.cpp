@@ -1,5 +1,3 @@
-#include <v8.h>
-#include <node.h>
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 #include <webkit/webkitwebview.h>
@@ -11,9 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 // std::clog << "debug output";
-
-using namespace node;
-using namespace v8;
 
 GtkWidget *window;
 GtkWidget *scrolled_window;
@@ -80,61 +75,36 @@ static gboolean download (
   return TRUE;
 }
 
-static Handle<Value> create_window(const Arguments& args)
+int main(int argc, char* argv[])
 {
-  HandleScope scope;
+  static gchar *url = const_cast<char*>("http://google.com");
+  static gchar *name = const_cast<char*>("TopCube");
+  static gint width = 800;
+  static gint height = 600;
+  static gint minwidth = 600;
+  static gint minheight = 400;
+  static GOptionEntry entries[] = {
+    { "url", 'u', 0, G_OPTION_ARG_STRING, &url, "URL" },
+    { "name", 'n', 0, G_OPTION_ARG_STRING, &name, "Window name" },
+    { "width", 'W', 0, G_OPTION_ARG_INT, &width, "Width" },
+    { "height", 'H', 0, G_OPTION_ARG_INT, &height, "Height" },
+    { "minwidth", 'w', 0, G_OPTION_ARG_INT, &minwidth, "Minimum width" },
+    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height" }
+  };
+  GError *error = NULL;
+  GOptionContext *options;
+  options = g_option_context_new("topcube options");
+  g_option_context_add_main_entries (options, entries, NULL);
+  g_option_context_add_group (options, gtk_get_option_group(TRUE));
+  if (!g_option_context_parse (options, &argc, &argv, &error)) {
+    g_print ("Error parsing options: %s\n", error->message);
+    exit (1);
+  }
 
-  if (args.Length() < 3) {
-    return ThrowException(Exception::TypeError(String::New("`url`, `width`, and `height` arguments are required")));
-  }
-  if (!args[0]->IsString()) {
-    return ThrowException(Exception::TypeError(String::New("`url` must be a string")));
-  }
-  if (!args[1]->IsInt32()) {
-    return ThrowException(Exception::TypeError(String::New("`width` must be an int32")));
-  }
-  if (!args[2]->IsInt32()) {
-    return ThrowException(Exception::TypeError(String::New("`height` must be an int32")));
-  }
-
-  String::Utf8Value url(args[0]->ToString());
-  int width = args[1]->Int32Value();
-  int height = args[2]->Int32Value();
-  int minwidth = 600;
-  int minheight = 400;
-
-  gtk_init (NULL, NULL);
+  gtk_init (&argc, &argv);
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   web_view = webkit_web_view_new ();
-
-  if (args.Length() > 3) {
-    if (!args[3]->IsObject())
-      return ThrowException(Exception::TypeError(String::New("`options` must be an object")));
-    Local<Object> options = args[3]->ToObject();
-
-    if (options->Has(String::New("minwidth"))) {
-      Local<Value> bind_opt = options->Get(String::New("minwidth"));
-      if (!bind_opt->IsNumber())
-        return ThrowException(Exception::TypeError(String::New("'minwidth' must be a number")));
-      minwidth = bind_opt->IntegerValue();
-    }
-
-    if (options->Has(String::New("minheight"))) {
-      Local<Value> bind_opt = options->Get(String::New("minheight"));
-      if (!bind_opt->IsNumber())
-        return ThrowException(Exception::TypeError(String::New("'minheight' must be a number")));
-      minheight = bind_opt->IntegerValue();
-    }
-
-    if (options->Has(String::New("name"))) {
-      Local<Value> bind_opt = options->Get(String::New("name"));
-      if (!bind_opt->IsString())
-        return ThrowException(Exception::TypeError(String::New("'name' must be a string")));
-      String::Utf8Value name(bind_opt->ToString());
-      gtk_window_set_wmclass(GTK_WINDOW (window), *name, *name);
-    }
-  }
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
@@ -144,7 +114,7 @@ static Handle<Value> create_window(const Arguments& args)
   gtk_container_add (GTK_CONTAINER (scrolled_window), web_view);
   gtk_container_add (GTK_CONTAINER (window), scrolled_window);
 
-  webkit_web_view_load_uri (WEBKIT_WEB_VIEW (web_view), *url);
+  webkit_web_view_load_uri (WEBKIT_WEB_VIEW (web_view), url);
 
   gtk_window_set_default_size (GTK_WINDOW (window), width, height);
 
@@ -153,19 +123,10 @@ static Handle<Value> create_window(const Arguments& args)
   hints.min_height = minheight;
   gtk_window_set_geometry_hints(GTK_WINDOW (window), GTK_WIDGET (scrolled_window), &hints, GDK_HINT_MIN_SIZE);
 
+  gtk_widget_grab_focus (GTK_WIDGET(web_view));
   gtk_widget_show_all (window);
-
-  // TODO: find a way to not block the node event loop
   gtk_main ();
-  return Undefined();
 
+  return 0;
 }
 
-extern "C" {
-  static void init(Handle<Object> target)
-  {
-    NODE_SET_METHOD(target, "createWindow", create_window);
-  }
-
-  NODE_MODULE(topcube_native, init);
-}
