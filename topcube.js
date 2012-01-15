@@ -21,13 +21,7 @@ module.exports = function (options) {
     }
 
     var args = [];
-    for (var key in options) {
-        // Omit keys besides name & url for now until options
-        // parsing bugs are resolved.
-        if (process.platform === 'win32' &&
-            (key !== 'name' || key !== 'url')) continue;
-        args.push('--' + key + '=' + options[key]);
-    }
+    for (var key in options) args.push('--' + key + '=' + options[key]);
 
     var child = spawn(client, args);
     child.on('exit', function(code) {
