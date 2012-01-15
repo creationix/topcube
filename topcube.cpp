@@ -116,6 +116,7 @@ int main(int argc, char* argv[])
 
   webkit_web_view_load_uri (WEBKIT_WEB_VIEW (web_view), url);
 
+  gtk_window_set_wmclass (GTK_WINDOW (window), name, name);
   gtk_window_set_default_size (GTK_WINDOW (window), width, height);
 
   GdkGeometry hints;
