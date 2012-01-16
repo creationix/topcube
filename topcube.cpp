@@ -13,6 +13,7 @@
 GtkWidget *window;
 GtkWidget *scrolled_window;
 GtkWidget *web_view;
+WebKitWebSettings *settings;
 
 void destroy (void)
 {
@@ -105,6 +106,10 @@ int main(int argc, char* argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   web_view = webkit_web_view_new ();
+
+  // Modify default settings - disable right click menus.
+  settings = webkit_web_view_get_settings (WEBKIT_WEB_VIEW(web_view));
+  g_object_set(settings, "enable-default-context-menu", FALSE, NULL);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
