@@ -29,6 +29,16 @@ TODO. Work on a native webkit client for Mac OS X that can be built within topcu
 
 ## API
 
+Pass a single `options` object to topcube with the following properties:
+
+- `url` of your running node application to point topcube at.
+- `name` of the window displayed in the titlebar. Also sets any window manager classes associated with the topcube window.
+- `width` in pixels of the window. Optional.
+- `height` in pixels of the windows. Optional.
+- `minwidth` in pixels. Restricts resizing the window width smaller than this value. Optional.
+- `minheight` in pixels. Restricts resizing the window height smaller than this value. Optional.
+- `ico` full path to a Windows `.ico` file to use for your application. Optional, no-op on non-windows platforms.
+
 Example usage of topcube to wrap a default "Hello world" server.
 
     var Http = require('http');
@@ -46,4 +56,3 @@ Example usage of topcube to wrap a default "Hello world" server.
       height: 600
     });
 
-More API docs to come.
