@@ -1,11 +1,19 @@
 #!/usr/bin/env node
 
-var Stack = require('stack'),
+var Http = require('http'),
+    Stack = require('stack'),
     Creationix = require('creationix'),
-    TopCube = require('topcube');
+    TopCube = require('../topcube.js');
 
-TopCube(Stack(
+Http.createServer(Stack(
   Creationix.log(),
   Creationix.static("/", __dirname + "/www", "index.html")
-), 800, 600);
+)).listen(7569);
+
+TopCube({
+  url: 'http://localhost:7569',
+  name: 'Creationix',
+  width: 800,
+  height: 600
+});
 
