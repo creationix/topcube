@@ -1,30 +1,34 @@
-var ChildProcess = require('child_process'),
-    Http = require('http');
+var spawn = require('child_process').spawn;
+var path = require('path');
 
-module.exports = function WebApp(handler, width, height) {
+module.exports = function (options) {
+    options = options || {};
+    options.url = options.url || 'http://nodejs.org';
+    options.name = options.name || 'nodejs';
 
-  var server;
-  var PORT = 7569;
-  (function listen() {
-    try {
-      server = Http.createServer(handler);
-      server.listen(PORT);
-    } catch (err) {
-      if (err.code === "EADDRINUSE") {
-        PORT++;
-        listen();
-        return;
-      }
-      throw err;
+    var client;
+    switch (process.platform) {
+    case 'win32':
+        client = path.resolve(__dirname + '/cefclient/cefclient');
+        break;
+    case 'linux':
+        client = path.resolve(__dirname + '/build/default/topcube');
+        break;
+    default:
+        console.warn('');
+        return null;
+        break;
     }
-  }());
 
-  var url = "http://127.0.0.1:" + PORT + "/";
-  var child = ChildProcess.spawn(process.execPath, [__dirname + "/client.js", JSON.stringify([url, width, height])]);
-  child.on('exit', function (code) {
-    process.exit(code);
-  });
-  child.stdout.pipe(process.stdout);
-  child.stderr.pipe(process.stderr);
-  return server;
+    var args = [];
+    for (var key in options) args.push('--' + key + '=' + options[key]);
+
+    var child = spawn(client, args);
+    child.on('exit', function(code) {
+        process.exit(code);
+    });
+    child.stdout.pipe(process.stdout);
+    child.stderr.pipe(process.stderr);
+    return child;
 };
+

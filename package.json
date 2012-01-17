@@ -9,5 +9,8 @@
   },
   "main": "./topcube.js",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "preinstall": "node package.js"
+  }
 }
