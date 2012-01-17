@@ -11,7 +11,7 @@ module.exports = function (options) {
     switch (process.platform) {
     case 'win32':
         client = path.resolve(__dirname + '/cefclient/cefclient');
-        keys = ['url', 'name', 'width', 'height', 'minwidth', 'minheight', 'ico'];
+        keys = ['url', 'name', 'width', 'height', 'minwidth', 'minheight', 'ico', 'cache-path'];
         break;
     case 'linux':
         client = path.resolve(__dirname + '/build/default/topcube');
