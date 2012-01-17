@@ -32,7 +32,7 @@ TODO. Work on a native webkit client for Mac OS X that can be built within topcu
 Pass a single `options` object to topcube with the following properties:
 
 - `url` of your running node application to point topcube at.
-- `name` of the window displayed in the titlebar. Also sets any window manager classes associated with the topcube window.
+- `name` of the window displayed in the titlebar. Also sets any window manager classes associated with the topcube window. On linux a `.desktop` file using the same name can be used set the icon for your application.
 - `width` in pixels of the window. Optional.
 - `height` in pixels of the windows. Optional.
 - `minwidth` in pixels. Restricts resizing the window width smaller than this value. Optional.
