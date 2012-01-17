@@ -7,12 +7,15 @@ module.exports = function (options) {
     options.name = options.name || 'nodejs';
 
     var client;
+    var keys = [];
     switch (process.platform) {
     case 'win32':
         client = path.resolve(__dirname + '/cefclient/cefclient');
+        keys = ['url', 'name', 'width', 'height', 'minwidth', 'minheight', 'ico'];
         break;
     case 'linux':
         client = path.resolve(__dirname + '/build/default/topcube');
+        keys = ['url', 'name', 'width', 'height', 'minwidth', 'minheight'];
         break;
     default:
         console.warn('');
@@ -21,7 +24,11 @@ module.exports = function (options) {
     }
 
     var args = [];
-    for (var key in options) args.push('--' + key + '=' + options[key]);
+    for (var key in options) {
+        if (keys.indexOf(key) !== -1) {
+            args.push('--' + key + '=' + options[key]);
+        }
+    }
 
     var child = spawn(client, args);
     child.on('exit', function(code) {
