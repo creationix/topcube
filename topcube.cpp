@@ -46,7 +46,7 @@ static gboolean download (
   gpointer user_data)
 {
   // Any other mime types we should handle?
-  if (strcmp(mime_type, "application/octet-stream") == 0) {
+  if (strcmp(mime_type, "text/html") != 0) {
     WebKitDownload *download = webkit_download_new(request);
     GtkWidget *window = gtk_widget_get_toplevel (GTK_WIDGET(web_view));
     GtkWidget *dialog = gtk_file_chooser_dialog_new ("Save file",
