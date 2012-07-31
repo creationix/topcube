@@ -2,7 +2,7 @@
   "author": "Tim Caswell <tim@creationix.com>",
   "name": "topcube",
   "description": "Simple bindings to create a webkit window that node can control",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/creationix/topcube.git"
