@@ -11,7 +11,7 @@
   "dependencies": {},
   "devDependencies": {},
   "engines": {
-    "node": "<0.7.x"
+    "node": "<0.9.x"
   },
   "scripts": {
     "preinstall": "node package.js"
