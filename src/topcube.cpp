@@ -90,12 +90,12 @@ int main(int argc, char* argv[])
   static gint minwidth = 600;
   static gint minheight = 400;
   static GOptionEntry entries[] = {
-    { "url", 'u', 0, G_OPTION_ARG_STRING, &url, "URL" },
-    { "name", 'n', 0, G_OPTION_ARG_STRING, &name, "Window name" },
-    { "width", 'W', 0, G_OPTION_ARG_INT, &width, "Width" },
-    { "height", 'H', 0, G_OPTION_ARG_INT, &height, "Height" },
-    { "minwidth", 'w', 0, G_OPTION_ARG_INT, &minwidth, "Minimum width" },
-    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height" }
+    { "url", 'u', 0, G_OPTION_ARG_STRING, &url, "URL", NULL },
+    { "name", 'n', 0, G_OPTION_ARG_STRING, &name, "Window name", NULL },
+    { "width", 'W', 0, G_OPTION_ARG_INT, &width, "Width", NULL },
+    { "height", 'H', 0, G_OPTION_ARG_INT, &height, "Height", NULL },
+    { "minwidth", 'w', 0, G_OPTION_ARG_INT, &minwidth, "Minimum width", NULL },
+    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height", NULL }
   };
   GError *error = NULL;
   GOptionContext *options;
