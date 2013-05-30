@@ -1,4 +1,4 @@
 build:
-	node-waf build
+	npm install
 
 .PHONY: build

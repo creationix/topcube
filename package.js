@@ -9,7 +9,7 @@ case 'win32':
     });
     break;
 case 'linux':
-    exec('node-waf clean || true; node-waf configure build', function(err, stdout, stderr) {
+    exec('`npm explore npm -g -- pwd`/bin/node-gyp-bin/node-gyp rebuild', function(err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         return err ? process.exit(1) : process.exit(0);

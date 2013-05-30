@@ -1,14 +1,17 @@
+#ifdef __APPLE__
+
+#include <iostream>
+int main(int argc, char* argv[])
+{
+    std::clog << "OS X is not currently supported by topcube\n";
+    return 0;
+}
+
+#else
+
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 #include <webkit/webkitwebview.h>
-
-// stl for n00b debugging :)
-#include <sstream>
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-// std::clog << "debug output";
 
 GtkWidget *window;
 GtkWidget *scrolled_window;
@@ -136,3 +139,5 @@ int main(int argc, char* argv[])
   return 0;
 }
 
+
+#endif // linux

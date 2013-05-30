@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git://github.com/creationix/topcube.git"
   },
-  "main": "./topcube.js",
+  "main": "./lib/topcube.js",
   "dependencies": {},
   "devDependencies": {},
   "engines": {
