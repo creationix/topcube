@@ -9,6 +9,8 @@ int main(int argc, char* argv[])
 
 #else
 
+#include <string.h> // for strcmp
+#include <cstdlib> // for exit
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 #include <webkit/webkitwebview.h>
