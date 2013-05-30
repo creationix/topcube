@@ -32,9 +32,9 @@
             '<@(PRODUCT_DIR)/topcube'
           ],
           'outputs': [
-            'lib/topcube'
+            'bin/topcube'
           ],
-          'action': ['cp', '<@(PRODUCT_DIR)/topcube', 'lib/topcube']
+          'action': ['cp', '<@(PRODUCT_DIR)/topcube', 'bin/topcube']
         }
       ]
     }
