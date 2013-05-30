@@ -1,24 +1,24 @@
 {
-    'conditions': [
-      ['OS=="linux"', {
-        'cflags_cc' : [
-            '<!@(pkg-config gtk+-2.0 --cflags)',
-            '<!@(pkg-config glib-2.0 --cflags)',
-            '<!@(pkg-config webkit-1.0 --cflags)'
-        ],
-        'libraries':[
-            '<!@(pkg-config gtk+-2.0 --libs)',
-            '<!@(pkg-config glib-2.0 --libs)',
-            '<!@(pkg-config webkit-1.0 --libs)'
-        ]
-      }]
-  ],
   'targets': [
     {
       'target_name': 'topcube',
       'type': 'executable',
       'sources': [
         'src/topcube.cpp'
+      ],
+      'conditions': [
+        ['OS=="linux"', {
+          'cflags_cc' : [
+              '<!@(pkg-config gtk+-2.0 --cflags)',
+              '<!@(pkg-config glib-2.0 --cflags)',
+              '<!@(pkg-config webkit-1.0 --cflags)'
+          ],
+          'libraries':[
+              '<!@(pkg-config gtk+-2.0 --libs)',
+              '<!@(pkg-config glib-2.0 --libs)',
+              '<!@(pkg-config webkit-1.0 --libs)'
+          ]
+        }]
       ],
     },
     {
