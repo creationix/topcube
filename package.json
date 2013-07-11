@@ -2,18 +2,13 @@
   "author": "Tim Caswell <tim@creationix.com>",
   "name": "topcube",
   "description": "Simple bindings to create a webkit window that node can control",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/creationix/topcube.git"
   },
-  "main": "./topcube.js",
+  "main": "./lib/topcube.js",
   "dependencies": {},
   "devDependencies": {},
-  "engines": {
-    "node": "<0.9.x"
-  },
-  "scripts": {
-    "preinstall": "node package.js"
-  }
+  "engines": { "node": "0.6.x || 0.8.x || 0.10.x" }
 }
