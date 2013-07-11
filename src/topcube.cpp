@@ -1,14 +1,19 @@
+#ifdef __APPLE__
+
+#include <iostream>
+int main(int argc, char* argv[])
+{
+    std::clog << "OS X is not currently supported by topcube\n";
+    return 0;
+}
+
+#else
+
+#include <string.h> // for strcmp
+#include <cstdlib> // for exit
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 #include <webkit/webkitwebview.h>
-
-// stl for n00b debugging :)
-#include <sstream>
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-// std::clog << "debug output";
 
 GtkWidget *window;
 GtkWidget *scrolled_window;
@@ -85,12 +90,12 @@ int main(int argc, char* argv[])
   static gint minwidth = 600;
   static gint minheight = 400;
   static GOptionEntry entries[] = {
-    { "url", 'u', 0, G_OPTION_ARG_STRING, &url, "URL" },
-    { "name", 'n', 0, G_OPTION_ARG_STRING, &name, "Window name" },
-    { "width", 'W', 0, G_OPTION_ARG_INT, &width, "Width" },
-    { "height", 'H', 0, G_OPTION_ARG_INT, &height, "Height" },
-    { "minwidth", 'w', 0, G_OPTION_ARG_INT, &minwidth, "Minimum width" },
-    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height" }
+    { "url", 'u', 0, G_OPTION_ARG_STRING, &url, "URL", NULL },
+    { "name", 'n', 0, G_OPTION_ARG_STRING, &name, "Window name", NULL },
+    { "width", 'W', 0, G_OPTION_ARG_INT, &width, "Width", NULL },
+    { "height", 'H', 0, G_OPTION_ARG_INT, &height, "Height", NULL },
+    { "minwidth", 'w', 0, G_OPTION_ARG_INT, &minwidth, "Minimum width", NULL },
+    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height", NULL }
   };
   GError *error = NULL;
   GOptionContext *options;
@@ -136,3 +141,5 @@ int main(int argc, char* argv[])
   return 0;
 }
 
+
+#endif // linux
