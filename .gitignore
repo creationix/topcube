@@ -1,3 +1,6 @@
+.DS_Store
 build
 sampleapp/node_modules
 bin/topcube
+bin/cefclient
+deps/cefclient-0.0.2.tar.gz
