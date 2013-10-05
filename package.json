@@ -10,5 +10,5 @@
   "main": "./lib/topcube.js",
   "dependencies": {},
   "devDependencies": {},
-  "engines": { "node": "0.6.x || 0.8.x || 0.10.x" }
+  "engines": { "node": ">= 0.8.11 < 0.11.0" }
 }
