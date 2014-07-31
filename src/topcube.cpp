@@ -83,19 +83,22 @@ static gboolean download (
 
 int main(int argc, char* argv[])
 {
+
   static gchar *url = const_cast<char*>("http://google.com");
   static gchar *name = const_cast<char*>("TopCube");
   static gint width = 800;
   static gint height = 600;
   static gint minwidth = 600;
   static gint minheight = 400;
+  static gboolean webgl = false;
   static GOptionEntry entries[] = {
     { "url", 'u', 0, G_OPTION_ARG_STRING, &url, "URL", NULL },
     { "name", 'n', 0, G_OPTION_ARG_STRING, &name, "Window name", NULL },
     { "width", 'W', 0, G_OPTION_ARG_INT, &width, "Width", NULL },
     { "height", 'H', 0, G_OPTION_ARG_INT, &height, "Height", NULL },
     { "minwidth", 'w', 0, G_OPTION_ARG_INT, &minwidth, "Minimum width", NULL },
-    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height", NULL }
+    { "minheight", 'h', 0, G_OPTION_ARG_INT, &minheight, "Minimum height", NULL },
+    { "webgl", 'g', 0, G_OPTION_ARG_NONE, &webgl, "webgl rendering", NULL }
   };
   GError *error = NULL;
   GOptionContext *options;
@@ -115,6 +118,10 @@ int main(int argc, char* argv[])
   // Modify default settings - disable right click menus.
   settings = webkit_web_view_get_settings (WEBKIT_WEB_VIEW(web_view));
   g_object_set(settings, "enable-default-context-menu", FALSE, NULL);
+  g_object_set(settings,"enable-accelerated-compositing",TRUE,NULL);
+  if(webgl){
+    g_object_set(settings,"enable-webgl"  ,TRUE,NULL);
+  }
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC (destroy), NULL);
   gtk_signal_connect (GTK_OBJECT (web_view), "title-changed", GTK_SIGNAL_FUNC (title_change), NULL);
